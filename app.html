@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html {{ HTML_ATTRS }}>
+<head>
+  {{ HEAD }}
+  <script type="text/javascript">
+    ;(function (window, document) {
+      'use strict';
+      var hotcss = {};
+      // 全部页面统一改的时候才适应PC端
+      hotcss.isPC = function () {
+        var sUserAgent = navigator.userAgent.toLowerCase();
+        var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+        var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+        var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+        var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+        var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+        var bIsAndroid = sUserAgent.match(/android/i) == "android";
+        var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+        var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+        if (!(bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)) {
+          return true;
+        } else {
+          return false
+        }
+      };
+      hotcss.setMaxWidth = function (maxWidth) {
+        if (hotcss.isPC()) {
+          document.documentElement.setAttribute('max-width', maxWidth);
+//          document.documentElement.classList.add("isPc");
+          hotcss.maxWidth = maxWidth;
+        }else{
+          document.documentElement.setAttribute('max-width', '');
+//          document.documentElement.classList.remove("isPc");
+          hotcss.maxWidth = 0;
+        }
+      };
+
+      hotcss.init = function(){
+        var dpr = 1;
+        var maxWidth = 640;
+        document.documentElement.setAttribute('data-dpr', dpr);
+        hotcss.dpr = dpr;
+        hotcss.setMaxWidth(maxWidth);
+      };
+
+      hotcss.px2rem = function (px, designWidth) {
+        if (!designWidth) {
+          designWidth = parseInt(hotcss.designWidth, 10)
+        }
+        return parseInt(px, 10) * 320 / designWidth / 20
+      };
+      hotcss.rem2px = function (rem, designWidth) {
+        if (!designWidth) {
+          designWidth = parseInt(hotcss.designWidth, 10)
+        }
+        return rem * 20 * designWidth / 320
+      };
+      hotcss.mresize = function () {
+        hotcss.init();
+        var innerWidth = document.documentElement.getBoundingClientRect().width || window.innerWidth;
+        if (hotcss.maxWidth && (innerWidth / hotcss.dpr > hotcss.maxWidth)) {
+          innerWidth = hotcss.maxWidth * hotcss.dpr
+        }
+        if (!innerWidth) {
+          return false
+        }
+        document.documentElement.style.fontSize = (innerWidth * 20 / 320) + 'px';
+        hotcss.callback && hotcss.callback()
+      };
+      hotcss.mresize();
+      window.addEventListener('resize', function () {
+        clearTimeout(hotcss.tid);
+        hotcss.tid = setTimeout(hotcss.mresize, 33)
+      }, false);
+      window.addEventListener('load', hotcss.mresize, false);
+      setTimeout(function () {
+        hotcss.mresize()
+      }, 333);
+      window.hotcss = hotcss
+
+
+
+    })(window, document);
+  </script>
+  </head>
+<body {{ BODY_ATTRS }}>
+{{ APP }}
+</body>
+</html>
