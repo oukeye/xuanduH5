@@ -1,4 +1,4 @@
-import {getTrackIdFromCookie} from '../utils/logic/isLogin'
+import {getTrackIdFromCookie} from '@/utils/cookieTool'
 import axios from 'axios';
 
 export default function ({req, next}) {

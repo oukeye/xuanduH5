@@ -1,8 +1,11 @@
 import axios from '~/plugins/axios.js';
 
-export function fetchTopicDetail(spId) {
+export function fetchLawyerList(params) {
+  return axios.get(`/api/lawyer/list`,{params});
+}
 
-  return axios.get(`/app/activity/topic/detail/h5/${spId}`);
+export function createLawyerMessage(params) {
+  return axios.post(`/api/lawyer_message/create`,params);
 }
 
 
